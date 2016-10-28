@@ -20,8 +20,8 @@ public class CameraView extends JavaCameraView {
 
     private int searchRadius = 4;
 
-    int width;
-    int height;
+    float width;
+    float height;
 
     public CameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -52,6 +52,9 @@ public class CameraView extends JavaCameraView {
         float w = canvas.getWidth()/mScale;
         float h = canvas.getHeight()/mScale;
 
+        width = w;
+        height = h;
+
         float size = w/10;
 
         float radius = size/6;
@@ -69,4 +72,14 @@ public class CameraView extends JavaCameraView {
 
         canvas.drawCircle(w/2, h/2, radius, p);
     }
+
+    public float getCanvasWidth(){
+        return width;
+    }
+
+    public float getCanvasHeight(){
+        return height;
+    }
+
+
 }

@@ -130,7 +130,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
             }
         }
 
-        height *= 0.7;
+        width = (int) mOpenCvCameraView.getCanvasWidth();
+        height = (int) mOpenCvCameraView.getCanvasHeight();
 
         int r = (int)inputFrame.rgba().get(width/2, height/2)[0];
         int g = (int)inputFrame.rgba().get(width/2, height/2)[1];
