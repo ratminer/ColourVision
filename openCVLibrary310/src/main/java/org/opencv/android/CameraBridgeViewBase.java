@@ -418,24 +418,9 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             Canvas canvas = getHolder().lockCanvas();
             if (canvas != null) {
                 canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
-                int rotation = windowManager.getDefaultDisplay().getRotation();
-                int degrees = 0;
-                // config degrees as you need
-                switch (rotation) {
-                    case Surface.ROTATION_0:
-                        degrees = 90;
-                        break;
-                    case Surface.ROTATION_90:
-                        break;
-                    case Surface.ROTATION_180:
-                        break;
-                    case Surface.ROTATION_270:
-                        degrees = -180;
-                        break;
-                }
 
                 Matrix matrix = new Matrix();
-                matrix.postRotate(degrees);
+                matrix.postRotate(90);
                 Bitmap outputBitmap = Bitmap.createBitmap(mCacheBitmap, 0, 0, mCacheBitmap.getWidth(), mCacheBitmap.getHeight(), matrix, true);
 
                 if (outputBitmap.getWidth() <= canvas.getWidth()) {
@@ -448,15 +433,29 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
                     canvas.scale(mScale, mScale, 0, 0);
                 }
                 Log.d(TAG, "mStretch value: " + mScale);
-
                 canvas.drawBitmap(outputBitmap, 0, 0, null);
+
+                /*
+                if (mScale != 0) {
+                    canvas.drawBitmap(mCacheBitmap, new Rect(0,0,mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
+                            new Rect((int)((canvas.getWidth() - mScale*mCacheBitmap.getWidth()) / 2),
+                                    (int)((canvas.getHeight() - mScale*mCacheBitmap.getHeight()) / 2),
+                                    (int)((canvas.getWidth() - mScale*mCacheBitmap.getWidth()) / 2 + mScale*mCacheBitmap.getWidth()),
+                                    (int)((canvas.getHeight() - mScale*mCacheBitmap.getHeight()) / 2 + mScale*mCacheBitmap.getHeight())), null);
+                } else {
+                    canvas.drawBitmap(mCacheBitmap, new Rect(0,0,mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
+                            new Rect((canvas.getWidth() - mCacheBitmap.getWidth()) / 2,
+                                    (canvas.getHeight() - mCacheBitmap.getHeight()) / 2,
+                                    (canvas.getWidth() - mCacheBitmap.getWidth()) / 2 + mCacheBitmap.getWidth(),
+                                    (canvas.getHeight() - mCacheBitmap.getHeight()) / 2 + mCacheBitmap.getHeight()), null);
+                }*/
+
 
                 if (mFpsMeter != null) {
                     mFpsMeter.measure();
                     mFpsMeter.draw(canvas, 20, 30);
                 }
                 getHolder().unlockCanvasAndPost(canvas);
-
             }
         }
     }

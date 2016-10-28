@@ -1,6 +1,7 @@
 package com.example.home.colourvision;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -20,6 +21,9 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 public class MainActivity extends Activity implements CvCameraViewListener2 {
@@ -63,6 +67,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         setContentView(R.layout.show_camera);
         mOpenCvCameraView = (JavaCameraView) findViewById(R.id.show_camera_activity_java_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -108,11 +114,20 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        double[] data = inputFrame.rgba().get(height/2, width/2);
+        double[] colour = inputFrame.rgba().get(height/2, width/2);
 
-        Log.i("colour in center", "color " + getColor(data));
+        mRgba = inputFrame.rgba();
 
-        return inputFrame.rgba();
+        //Core.transpose(mRgba, mRgbaT);
+        //Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size());
+        //Core.flip(mRgbaF, mRgba, 1 );
+
+        Imgproc.rectangle(mRgba, new Point(100, 100), new Point(200, 200), new Scalar(0,255,255),-1, 4, 0);
+
+        Imgproc.rectangle(mRgba, new Point(400, 400), new Point(500, 420), new Scalar(255,0,0), -1);
+
+
+        return mRgba;
     }
 
     private int getColor(double[] data) {
