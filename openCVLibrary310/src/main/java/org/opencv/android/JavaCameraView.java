@@ -3,7 +3,10 @@ package org.opencv.android;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -198,7 +201,8 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 
                     /* Finally we are ready to start the preview */
                     Log.d(TAG, "startPreview");
-                    mCamera.setDisplayOrientation(90);
+                    if(params.isVideoStabilizationSupported())
+                        params.setVideoStabilization(true);
                     mCamera.startPreview();
                 }
                 else

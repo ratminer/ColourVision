@@ -13,7 +13,9 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -450,6 +452,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
                                     (canvas.getHeight() - mCacheBitmap.getHeight()) / 2 + mCacheBitmap.getHeight()), null);
                 }*/
 
+                drawFocusBox(canvas);
 
                 if (mFpsMeter != null) {
                     mFpsMeter.measure();
@@ -523,5 +526,20 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         } else {
             return (float) widthTarget / (float) widthSource;
         }
+    }
+
+    private void drawFocusBox(Canvas canvas) {
+        Paint p = new Paint();
+        p.setStyle(Paint.Style.STROKE);
+        p.setColor(Color.WHITE);
+        p.setStrokeWidth(5);
+
+        float size =  (canvas.getWidth()/5)/mScale;
+
+        canvas.drawRect((canvas.getWidth()/2)/mScale-size/2,
+                        (canvas.getHeight()/2)/mScale-size/2,
+                        (canvas.getWidth()/2)/mScale+size/2,
+                        (canvas.getHeight()/2)/mScale+size/2,
+                        p);
     }
 }

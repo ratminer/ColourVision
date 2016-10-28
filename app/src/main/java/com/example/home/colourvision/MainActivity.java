@@ -3,11 +3,15 @@ package com.example.home.colourvision;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.Surface;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -39,6 +43,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     Mat mRgbaF;
     Mat mRgbaT;
 
+    private SurfaceHolder holder;
+    private View view;
+
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         public void onManagerConnected(int status) {
             switch (status) {
@@ -68,6 +75,9 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        //view = (View)findViewById(R.id.focus_box);
+        //view.setVisibility(View.VISIBLE);
 
         setContentView(R.layout.show_camera);
         mOpenCvCameraView = (JavaCameraView) findViewById(R.id.show_camera_activity_java_surface_view);
@@ -102,9 +112,6 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
     public void onCameraViewStarted(int width, int height) {
         this.height = height;
         this.width = width;
-        mRgba = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaF = new Mat(height, width, CvType.CV_8UC4);
-        mRgbaT = new Mat(height, width, CvType.CV_8UC4);
     }
 
     @Override
@@ -118,19 +125,13 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
         mRgba = inputFrame.rgba();
 
-        //Core.transpose(mRgba, mRgbaT);
-        //Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size());
-        //Core.flip(mRgbaF, mRgba, 1 );
-
-        Imgproc.rectangle(mRgba, new Point(100, 100), new Point(200, 200), new Scalar(0,255,255),-1, 4, 0);
-
-        Imgproc.rectangle(mRgba, new Point(400, 400), new Point(500, 420), new Scalar(255,0,0), -1);
-
-
         return mRgba;
     }
 
     private int getColor(double[] data) {
+
         return Color.argb((int)data[3], (int)data[0], (int)data[1], (int)data[2]);
     }
 }
+
+
