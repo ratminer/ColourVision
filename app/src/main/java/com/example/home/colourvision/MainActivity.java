@@ -34,17 +34,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     private static final String TAG = "OCVSample::Activity";
 
-    private CameraBridgeViewBase mOpenCvCameraView;
-
-    private int height;
-    private int width;
-
-    Mat mRgba;
-    Mat mRgbaF;
-    Mat mRgbaT;
-
-    private SurfaceHolder holder;
-    private View view;
+    private CameraView mOpenCvCameraView;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         public void onManagerConnected(int status) {
@@ -80,7 +70,7 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
         //view.setVisibility(View.VISIBLE);
 
         setContentView(R.layout.show_camera);
-        mOpenCvCameraView = (JavaCameraView) findViewById(R.id.show_camera_activity_java_surface_view);
+        mOpenCvCameraView = (CameraView) findViewById(R.id.show_camera_activity_java_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
@@ -110,28 +100,41 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     @Override
     public void onCameraViewStarted(int width, int height) {
-        this.height = height;
-        this.width = width;
+        mOpenCvCameraView.setHeight(height);
+        mOpenCvCameraView.setWidth(width);
     }
 
     @Override
     public void onCameraViewStopped() {
-        mRgba.release();
+
     }
 
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        double[] colour = inputFrame.rgba().get(height/2, width/2);
-
-        mRgba = inputFrame.rgba();
-
-        return mRgba;
+        return mOpenCvCameraView.onCameraFrame(inputFrame);
     }
 
-    private int getColor(double[] data) {
+    // averages colour over certain area
+    // finds most popular colour
+    private int getColor(double[][] data) {
 
-        return Color.argb((int)data[3], (int)data[0], (int)data[1], (int)data[2]);
+        int count = 0;
+
+        double red = 0;
+        double blue = 0;
+        double green = 0;
+
+        for(double[] d : data) {
+            count++;
+            red += d[0];
+            blue += d[1];
+            green += d[3];
+        }
+
+        red = red/count;
+        blue = blue/count;
+        green = green/count;
+
+        return Color.rgb((int)red,(int)blue,(int)green);
     }
 }
-
-
