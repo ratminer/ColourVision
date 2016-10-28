@@ -36,6 +36,14 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     private CameraView mOpenCvCameraView;
 
+    private int height;
+    private int width;
+
+    int searchRadius = 5;
+
+    private SurfaceHolder holder;
+    private View view;
+
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         public void onManagerConnected(int status) {
             switch (status) {
@@ -100,8 +108,8 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     @Override
     public void onCameraViewStarted(int width, int height) {
-        mOpenCvCameraView.setHeight(height);
-        mOpenCvCameraView.setWidth(width);
+        this.height = height;
+        this.width = width;
     }
 
     @Override
@@ -109,9 +117,28 @@ public class MainActivity extends Activity implements CvCameraViewListener2 {
 
     }
 
+    double[][] colours = new double[searchRadius*searchRadius][4];
+
     @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        return mOpenCvCameraView.onCameraFrame(inputFrame);
+
+        //return mOpenCvCameraView.onCameraFrame(inputFrame);
+
+        for(int i = 0; i < searchRadius-1; i++) {
+            for(int j = 0; j < searchRadius-1; j++) {
+                colours[i+j] = inputFrame.rgba().get(i,j);
+            }
+        }
+
+        int r = (int)inputFrame.rgba().get(width/2, height/2)[0];
+        int g = (int)inputFrame.rgba().get(width/2, height/2)[1];
+        int b = (int)inputFrame.rgba().get(width/2, height/2)[2];
+        int a = (int)inputFrame.rgba().get(width/2, height/2)[3];
+
+        mOpenCvCameraView.setColor(Color.argb(a,r,g,b));
+
+        return inputFrame.rgba();
+
     }
 
     // averages colour over certain area

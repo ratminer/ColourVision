@@ -20,8 +20,8 @@ public class CameraView extends JavaCameraView {
 
     private int searchRadius = 4;
 
-    int width=0;
-    int height=0;
+    int width;
+    int height;
 
     public CameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,18 +42,6 @@ public class CameraView extends JavaCameraView {
 
         double[][] colours = new double[searchRadius*searchRadius][4];
 
-        for(int i = 0; i < searchRadius-1; i++) {
-            for(int j = 0; j < searchRadius-1; j++) {
-                colours[i+j] = inputFrame.rgba().get(i,j);
-            }
-        }
-
-        int r = (int)inputFrame.rgba().get(width, height)[0];
-        int g = (int)inputFrame.rgba().get(width, height)[1];
-        int b = (int)inputFrame.rgba().get(width, height)[2];
-        int a = (int)inputFrame.rgba().get(width, height)[3];
-
-        setColor(Color.argb(a,r,g,b));
 
         return inputFrame.rgba();
     }
@@ -61,23 +49,24 @@ public class CameraView extends JavaCameraView {
     private void drawFocusBox(Canvas canvas) {
         Paint p = new Paint();
 
-        float width = canvas.getWidth()/mScale;
-        float height = canvas.getHeight()/mScale;
+        float w = canvas.getWidth()/mScale;
+        float h = canvas.getHeight()/mScale;
 
-        float size = width/10;
+        float size = w/10;
 
         float radius = size/6;
 
         p.setStyle(Paint.Style.FILL);
         p.setColor(color);
 
-        canvas.drawCircle(width/2, height/2, radius, p);
+        canvas.drawCircle(w/2, h/2, radius, p);
 
         p.setStyle(Paint.Style.STROKE);
         p.setColor(Color.WHITE);
         p.setStrokeWidth(5);
 
-        canvas.drawRect(width/2-size, height/2-size, width/2+size, height/2+size, p);
-        canvas.drawCircle(width/2, height/2, radius, p);
+        canvas.drawRect(w/2-size, h/2-size, w/2+size, h/2+size, p);
+
+        canvas.drawCircle(w/2, h/2, radius, p);
     }
 }
